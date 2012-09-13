@@ -1,7 +1,7 @@
 name = ecg
 compiler = gcc
 flags = -Wall
-objects = main.o sensor.o filter.o
+objects = main.o util.o sensor.o filter.o peaks.o
 
 all: $(name)
 

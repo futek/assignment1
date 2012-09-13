@@ -1,5 +1,7 @@
 #include "filter.h"
 
+#include "util.h"
+
 #define RAW_BUFSIZE 13
 #define LOW_BUFSIZE 33
 #define HIGH_BUFSIZE 5
@@ -13,14 +15,6 @@ int x_high[HIGH_BUFSIZE];
 int x_der[DER_BUFSIZE];
 int x_sqr[SQR_BUFSIZE];
 int x_mwi[MWI_BUFSIZE];
-
-void shift(int array[], int length) {
-  int i;
-
-  for (i = length - 1; i > 0; i--) {
-    array[i] = array[i - 1];
-  }
-}
 
 int filter(int value) {
   int i;
