@@ -16,10 +16,11 @@ int recent_rr[RR_BUFSIZE], recent_rr_ok[RR_BUFSIZE];
 // TODO: initial estimates?
 int npkf, spkf;
 int threshold1, threshold2;
+int rr_average1, rr_average2;
 int rr_low, rr_high, rr_miss;
 
 int detect_peak(int value) {
-  int peak_value, peak_time, rr, rr_average1, rr_average2, i, peak2, rpeak_detected = 0;
+  int peak_value, peak_time, rr, i, peak2, rpeak_detected = 0;
 
   shift(data, DATA_BUFSIZE);
   data[0] = value;
