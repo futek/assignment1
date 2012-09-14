@@ -26,7 +26,7 @@ int detect_peak(int value) {
   data[0] = value;
 
   // find peak
-  if (data[0] < data[1] && data[1] > data[2]) {
+  if (data[2] < data[1] && data[1] > data[0]) {
     peak_value = data[1];
     peak_time = time - 1;
 
