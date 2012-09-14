@@ -67,7 +67,7 @@ int detect_peak(int value) {
         threshold1 = npkf + (spkf - npkf) / 4;
         threshold2 = threshold1 / 2;
 
-        // update heartbeat
+        // update heartrate
         heartrate = SAMPLE_RATE * 60 / rr_average2;
       } else {
         if (rr > rr_miss) {
