@@ -70,10 +70,10 @@ int detect_peak(int value) {
 
         // update heartrate
         heartrate = SAMPLE_RATE * 60 / rr_average2;
+
+        rr_misses = 0;
       } else {
         if (rr > rr_miss) {
-          rr_misses++;
-
           // search backwards through peaks
           for (i = 1; i < PEAKS_BUFSIZE; i++) {
             if (peak2 > threshold2) {
@@ -104,9 +104,9 @@ int detect_peak(int value) {
               break;
             }
           }
-        } else {
-          rr_misses = 0;
         }
+
+        rr_misses++;
       }
     } else {
       // update estimates
