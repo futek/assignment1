@@ -7,7 +7,7 @@
 #define PEAKS_BUFSIZE 8
 #define RR_BUFSIZE 8
 
-unsigned long time = 0;
+unsigned long time;
 
 int data[DATA_BUFSIZE];
 int peaks[PEAKS_BUFSIZE];
