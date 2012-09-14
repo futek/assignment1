@@ -64,7 +64,7 @@ int detect_peak(int value) {
         rr_high = rr_average2 * 116 / 100;
         rr_miss = rr_average2 * 166 / 100;
 
-        threshold1 = npkf = (spkf - npkf) / 4;
+        threshold1 = npkf + (spkf - npkf) / 4;
         threshold2 = threshold1 / 2;
 
         // update heartbeat
@@ -97,7 +97,7 @@ int detect_peak(int value) {
               rr_high = rr_average2 * 116 / 100;
               rr_miss = rr_average2 * 166 / 100;
 
-              threshold1 = npkf = (spkf - npkf) / 4;
+              threshold1 = npkf + (spkf - npkf) / 4;
               threshold2 = threshold1 / 2;
 
               break;
@@ -110,7 +110,7 @@ int detect_peak(int value) {
     } else {
       // update estimates
       npkf = peak_value / 8 + npkf * 7 / 8;
-      threshold1 = npkf = (spkf - npkf) / 4;
+      threshold1 = npkf + (spkf - npkf) / 4;
       threshold2 = threshold1 / 2;
     }
   }
