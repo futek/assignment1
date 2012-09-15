@@ -70,7 +70,7 @@ int detect_peak(int value) {
         threshold2 = threshold1 / 2;
 
         // update heartrate
-        heartrate = SAMPLE_RATE * 60 / rr_average1;
+        heartrate = SAMPLE_RATE * 60 / rr;
 
         // reset successive rr misses counter
         rr_misses = 0;
@@ -106,7 +106,7 @@ int detect_peak(int value) {
               threshold2 = threshold1 / 2;
 
               // update heartrate
-              heartrate = SAMPLE_RATE * 60 / rr_average1;
+              heartrate = SAMPLE_RATE * 60 / rr;
 
               break;
             }
