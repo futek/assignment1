@@ -1,7 +1,12 @@
 #ifndef PEAKS_H
 #define PEAKS_H
 
-int last_rpeak_value, last_rpeak_time;
+struct peak {
+  int value;
+  unsigned long time;
+};
+
+struct peak last_rpeak;
 int heartrate, rr_misses;
 
 int detect_peak(int value);

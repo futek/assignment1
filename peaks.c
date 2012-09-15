@@ -10,7 +10,7 @@
 unsigned long time;
 
 int data[DATA_BUFSIZE];
-int peaks[PEAKS_BUFSIZE];
+struct peak peaks[PEAKS_BUFSIZE];
 int recent_rr[RR_BUFSIZE], recent_rr_ok[RR_BUFSIZE];
 
 // TODO: initial estimates?
@@ -20,37 +20,38 @@ int rr_average1, rr_average2;
 int rr_low, rr_high, rr_miss;
 
 int detect_peak(int value) {
-  int peak_value, peak_time, rr, i, peak2, rpeak_detected = 0;
+  struct peak peak, peak2;
+  int i, rr, rpeak_detected = 0;
 
-  shift(data, DATA_BUFSIZE);
+  shift_int(data, DATA_BUFSIZE);
   data[0] = value;
 
   // find peak
   if (data[2] < data[1] && data[1] > data[0]) {
-    peak_value = data[1];
-    peak_time = time - 1;
+    peak.value = data[1];
+    peak.time = time - 1;
 
-    if (peak_value > threshold1) {
+    if (peak.value > threshold1) {
       // store peak
-      shift(peaks, PEAKS_BUFSIZE);
-      peaks[0] = peak_value;
+      shift_peak(peaks, PEAKS_BUFSIZE);
+      peaks[0] = peak;
 
       // calculate rr
-      rr = peak_time - last_rpeak_time;
+      rr = peak.time - last_rpeak.time;
 
       if (rr_low < rr && rr < rr_high) {
         // store peak as rpeak
-        last_rpeak_value = peak_value;
-        last_rpeak_time = peak_time;
+        last_rpeak.value = peak.value;
+        last_rpeak.time = peak.time;
         rpeak_detected = 1;
 
         // update estimates
-        spkf = peak_value / 8 + spkf * 7 / 8;
+        spkf = peak.value / 8 + spkf * 7 / 8;
 
-        shift(recent_rr, RR_BUFSIZE);
+        shift_int(recent_rr, RR_BUFSIZE);
         recent_rr[0] = rr;
 
-        shift(recent_rr_ok, RR_BUFSIZE);
+        shift_int(recent_rr_ok, RR_BUFSIZE);
         recent_rr_ok[0] = rr;
 
         rr_average1 = 0;
@@ -71,21 +72,24 @@ int detect_peak(int value) {
         // update heartrate
         heartrate = SAMPLE_RATE * 60 / rr_average1;
 
+        // reset successive rr misses counter
         rr_misses = 0;
       } else {
         if (rr > rr_miss) {
           // search backwards through peaks
           for (i = 1; i < PEAKS_BUFSIZE; i++) {
-            if (peak2 > threshold2) {
-              // store peak as rpeak
-              last_rpeak_value = peak_value;
-              last_rpeak_time = peak_time - i;
+            peak2 = peaks[i];
+
+            if (peak2.value > threshold2) {
+              // store peak2 as rpeak
+              last_rpeak.value = peak2.value;
+              last_rpeak.time = peak2.time;
               rpeak_detected = 1;
 
               // update estimates
-              spkf = peak_value / 8 + spkf * 7 / 8;
+              spkf = peak.value / 8 + spkf * 7 / 8;
 
-              shift(recent_rr, RR_BUFSIZE);
+              shift_int(recent_rr, RR_BUFSIZE);
               recent_rr[0] = rr;
 
               rr_average1 = 0;
@@ -109,11 +113,12 @@ int detect_peak(int value) {
           }
         }
 
+        // increment successive rr misses counter
         rr_misses++;
       }
     } else {
       // update estimates
-      npkf = peak_value / 8 + npkf * 7 / 8;
+      npkf = peak.value / 8 + npkf * 7 / 8;
       threshold1 = npkf + (spkf - npkf) / 4;
       threshold2 = threshold1 / 2;
     }

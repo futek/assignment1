@@ -1,6 +1,9 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-void shift(int buffer[], int size);
+#include "peaks.h"
+
+void shift_int(int buffer[], int size);
+void shift_peak(struct peak buffer[], int size);
 
 #endif

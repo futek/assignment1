@@ -16,11 +16,11 @@ int main(int argc, char *argv[]) {
 
     // peak detection
     if (detect_peak(filtered_value)) {
-      printf("rpeak time:  %i\n", last_rpeak_time);
-      printf("rpeak value: %i\n", last_rpeak_value);
+      printf("rpeak time:  %ld\n", last_rpeak.time);
+      printf("rpeak value: %i\n", last_rpeak.value);
       printf("heart rate:  %i\n", heartrate);
 
-      if (last_rpeak_value < 2000) {
+      if (last_rpeak.value < 2000) {
         printf("warning: weak heartbeat intensity!\n");
       }
 
