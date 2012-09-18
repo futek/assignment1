@@ -1,48 +1,60 @@
 #include "filter.h"
 
-#include "util.h"
+int low_pass(int value) {
+  static int n = 12, x[26], y1, y2;
+  int y0;
 
-#define RAW_BUFSIZE 13
-#define LOW_BUFSIZE 33
-#define HIGH_BUFSIZE 5
-#define DER_BUFSIZE 1
-#define SQR_BUFSIZE 30
-#define MWI_BUFSIZE 1
+  x[n] = x[n + 13] = value;
+  y0 = 2 * y1 - y2 + (x[n] - 2 * x[n + 6] + x[n + 12]) / 32;
+  y2 = y1;
+  y1 = y0;
 
-int x_raw[RAW_BUFSIZE];
-int x_low[LOW_BUFSIZE];
-int x_high[HIGH_BUFSIZE];
-int x_der[DER_BUFSIZE];
-int x_sqr[SQR_BUFSIZE];
-int x_mwi[MWI_BUFSIZE];
+  if (--n < 0) n = 12;
+
+  return y0;
+}
+
+int high_pass(int value) {
+  static int n = 32, x[66], y1;
+  int y0;
+
+  x[n] = x[n + 33] = value;
+  y0 = y1 - x[n] / 32 + x[n + 16] - x[n + 17] + x[n + 32] / 32;
+  y1 = y0;
+
+  if (--n < 0) n = 32;
+
+  return y0;
+}
+
+int derivative(int value) {
+  static int n = 4, x[10];
+  int y0;
+
+  x[n] = x[n + 5] = value;
+  y0 = (2 * x[n] + x[n + 1] - x[n + 3] - 2 * x[n + 4]) / 8;
+
+  if (--n < 0) n = 4;
+
+  return y0;
+}
+
+int square(int value) {
+  return value * value;
+}
+
+int moving_window_integration(int value) {
+  static int n = 29, x[60];
+  int i, y0 = 0;
+
+  x[n] = x[n + 30] = value;
+  for (i = 0; i < 30; i++) y0 += x[n + i] / 30;
+
+  if (--n < 0) n = 29;
+
+  return y0;
+}
 
 int filter(int value) {
-  int i;
-
-  // raw data
-  shift_int(x_raw, RAW_BUFSIZE);
-  x_raw[0] = value;
-
-  // low-pass
-  shift_int(x_low, LOW_BUFSIZE);
-  x_low[0] = 2 * x_low[1] - x_low[2] + (x_raw[0] - 2 * x_raw[6] + x_raw[12]) / 32;
-
-  // high-pass
-  shift_int(x_high, HIGH_BUFSIZE);
-  x_high[0] = x_high[1] - x_low[0] / 32 + x_low[16] - x_low[17] + x_low[32] / 32;
-
-  // derivative
-  shift_int(x_der, DER_BUFSIZE);
-  x_der[0] = (2 * x_high[0] + x_high[1] - x_high[3] - 2 * x_high[4]) / 8;
-
-  // square
-  shift_int(x_sqr, SQR_BUFSIZE);
-  x_sqr[0] = x_der[0] * x_der[0];
-
-  // moving window integration
-  shift_int(x_mwi, MWI_BUFSIZE);
-  x_mwi[0] = 0;
-  for (i = 0; i < 30; i++) x_mwi[0] += x_sqr[i] / 30;
-
-  return x_mwi[0];
+  return moving_window_integration(square(derivative(high_pass(low_pass(value)))));
 }
