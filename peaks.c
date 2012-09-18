@@ -6,17 +6,6 @@
 #define PEAKS_BUFSIZE 8
 #define RR_BUFSIZE 8
 
-unsigned long time;
-
-int x1, x2;
-struct peak peaks[PEAKS_BUFSIZE];
-
-// TODO: initial estimates?
-int npkf, spkf;
-int threshold1, threshold2;
-int rr_average1, rr_average2;
-int rr_low, rr_high, rr_miss;
-
 int calculate_rr_average1(int rr) {
   static int n = RR_BUFSIZE - 1, x[RR_BUFSIZE * 2], sum;
 
@@ -42,6 +31,14 @@ int calculate_rr_average2(int rr_ok) {
 }
 
 int detect_peak(int x0) {
+  static int x1, x2;
+  static unsigned long time;
+  static struct peak peaks[PEAKS_BUFSIZE];
+  static int npkf, spkf;
+  static int threshold1, threshold2;
+  static int rr_average1, rr_average2;
+  static int rr_low, rr_high, rr_miss;
+
   struct peak peak, peak2;
   int i, rr, rpeak_detected = 0;
 
