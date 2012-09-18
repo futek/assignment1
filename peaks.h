@@ -9,6 +9,6 @@ struct peak {
 struct peak last_rpeak;
 int heartrate, rr_misses;
 
-int detect_peak(int value);
+int detect_peak(int x0);
 
 #endif

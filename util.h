@@ -3,7 +3,6 @@
 
 #include "peaks.h"
 
-void shift_int(int buffer[], int size);
 void shift_peak(struct peak buffer[], int size);
 
 #endif

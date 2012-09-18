@@ -3,15 +3,13 @@
 #include "config.h"
 #include "util.h"
 
-#define DATA_BUFSIZE 3
 #define PEAKS_BUFSIZE 8
 #define RR_BUFSIZE 8
 
 unsigned long time;
 
-int data[DATA_BUFSIZE];
+int x1, x2;
 struct peak peaks[PEAKS_BUFSIZE];
-int recent_rr[RR_BUFSIZE], recent_rr_ok[RR_BUFSIZE];
 
 // TODO: initial estimates?
 int npkf, spkf;
@@ -19,16 +17,37 @@ int threshold1, threshold2;
 int rr_average1, rr_average2;
 int rr_low, rr_high, rr_miss;
 
-int detect_peak(int value) {
+int calculate_rr_average1(int rr) {
+  static int n = RR_BUFSIZE - 1, x[RR_BUFSIZE * 2], sum;
+
+  x[n] = x[n + RR_BUFSIZE] = rr;
+  sum -= x[n + RR_BUFSIZE - 1];
+  sum += x[n];
+
+  if (--n < 0) n = RR_BUFSIZE - 1;
+
+  return sum / RR_BUFSIZE;
+}
+
+int calculate_rr_average2(int rr_ok) {
+  static int n = RR_BUFSIZE - 1, x[RR_BUFSIZE * 2], sum;
+
+  x[n] = x[n + RR_BUFSIZE] = rr_ok;
+  sum -= x[n + RR_BUFSIZE - 1];
+  sum += x[n];
+
+  if (--n < 0) n = RR_BUFSIZE - 1;
+
+  return sum / RR_BUFSIZE;
+}
+
+int detect_peak(int x0) {
   struct peak peak, peak2;
   int i, rr, rpeak_detected = 0;
 
-  shift_int(data, DATA_BUFSIZE);
-  data[0] = value;
-
   // find peak
-  if (data[2] < data[1] && data[1] > data[0]) {
-    peak.value = data[1];
+  if (x2 < x1 && x1 > x0) {
+    peak.value = x1;
     peak.time = time - 1;
 
     if (peak.value > threshold1) {
@@ -48,19 +67,8 @@ int detect_peak(int value) {
         // update estimates
         spkf = peak.value / 8 + spkf * 7 / 8;
 
-        shift_int(recent_rr, RR_BUFSIZE);
-        recent_rr[0] = rr;
-
-        shift_int(recent_rr_ok, RR_BUFSIZE);
-        recent_rr_ok[0] = rr;
-
-        rr_average1 = 0;
-        rr_average2 = 0;
-
-        for (i = 0; i < RR_BUFSIZE; i++) {
-          rr_average1 += recent_rr[i] / RR_BUFSIZE;
-          rr_average2 += recent_rr_ok[i] / RR_BUFSIZE;
-        }
+        rr_average1 = calculate_rr_average1(rr);
+        rr_average2 = calculate_rr_average1(rr);
 
         rr_low = rr_average2 * 92 / 100;
         rr_high = rr_average2 * 116 / 100;
@@ -89,14 +97,7 @@ int detect_peak(int value) {
               // update estimates
               spkf = peak.value / 8 + spkf * 7 / 8;
 
-              shift_int(recent_rr, RR_BUFSIZE);
-              recent_rr[0] = rr;
-
-              rr_average1 = 0;
-
-              for (i = 0; i < RR_BUFSIZE; i++) {
-                rr_average1 += recent_rr[i] / RR_BUFSIZE;
-              }
+              rr_average1 = calculate_rr_average1(rr);
 
               rr_low = rr_average2 * 92 / 100;
               rr_high = rr_average2 * 116 / 100;
@@ -123,6 +124,9 @@ int detect_peak(int value) {
       threshold2 = threshold1 / 2;
     }
   }
+
+  x2 = x1;
+  x1 = x0;
 
   time++;
 
