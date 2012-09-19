@@ -87,7 +87,7 @@ int detect_peak(int x0) {
 
             if (peak2.value > threshold2) {
               // recalculate rr
-              rr = last_rpeak.time - peak2.time;
+              rr = peak2.time - last_rpeak.time;
 
               // store peak2 as rpeak
               last_rpeak.value = peak2.value;
