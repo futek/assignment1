@@ -44,7 +44,7 @@ int detect_peak(int x0) {
 
   // initialize average rr intervals
   if (time == 0) {
-    for (i = 0; i < RR_BUFSIZE ; i++) {
+    for (i = 0; i < RR_BUFSIZE; i++) {
       calculate_rr_average1(RR_EST);
       calculate_rr_average2(RR_EST);
     }
