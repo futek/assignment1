@@ -96,9 +96,9 @@ int detect_peak(int x0) {
 
               rr_average1 = calculate_rr_average1(rr);
 
-              rr_low = rr_average2 * 92 / 100;
-              rr_high = rr_average2 * 116 / 100;
-              rr_miss = rr_average2 * 166 / 100;
+              rr_low = rr_average1 * 92 / 100;
+              rr_high = rr_average1 * 116 / 100;
+              rr_miss = rr_average1 * 166 / 100;
 
               threshold1 = npkf + (spkf - npkf) / 4;
               threshold2 = threshold1 / 2;
