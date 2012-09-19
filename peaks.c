@@ -85,6 +85,9 @@ int detect_peak(int x0) {
           for (i = 1; i < PEAKS_BUFSIZE; i++) {
             peak2 = peaks[i];
 
+            // don't search too far back
+            if (peak2.time <= last_rpeak.time) break;
+
             if (peak2.value > threshold2) {
               // recalculate rr
               rr = peak2.time - last_rpeak.time;
