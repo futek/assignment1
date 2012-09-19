@@ -95,7 +95,7 @@ int detect_peak(int x0) {
               rpeak_detected = 1;
 
               // update estimates
-              spkf = peak.value / 8 + spkf * 7 / 8;
+              spkf = peak2.value / 8 + spkf * 7 / 8;
 
               rr_average1 = calculate_rr_average1(rr);
 
