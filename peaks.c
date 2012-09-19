@@ -36,11 +36,19 @@ int detect_peak(int x0) {
   static struct peak peaks[PEAKS_BUFSIZE];
   static int npkf, spkf;
   static int threshold1, threshold2;
-  static int rr_low = HEART_RATE * 92 / 100, rr_high = HEART_RATE * 116 / 100, rr_miss = HEART_RATE * 166 / 100;
+  static int rr_low = HEART_RATE_EST * 92 / 100, rr_high = HEART_RATE_EST * 116 / 100, rr_miss = HEART_RATE_EST * 166 / 100;
 
   struct peak peak, peak2;
   int rr_average1, rr_average2;
   int i, rr, rpeak_detected = 0;
+
+  // initialize average rr intervals
+  if (time == 0) {
+    for (i = 0; i < RR_BUFSIZE ; i++) {
+      calculate_rr_average1(RR_EST);
+      calculate_rr_average2(RR_EST);
+    }
+  }
 
   // find peak
   if (x2 < x1 && x1 > x0) {
