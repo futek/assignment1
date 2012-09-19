@@ -6,7 +6,7 @@
 #define PEAKS_BUFSIZE 8
 #define RR_BUFSIZE 8
 
-int calculate_rr_average1(int rr) {
+static int calculate_rr_average1(int rr) {
   static int n = RR_BUFSIZE - 1, x[RR_BUFSIZE * 2], sum;
 
   x[n] = x[n + RR_BUFSIZE] = rr;
@@ -18,7 +18,7 @@ int calculate_rr_average1(int rr) {
   return sum / RR_BUFSIZE;
 }
 
-int calculate_rr_average2(int rr_ok) {
+static int calculate_rr_average2(int rr_ok) {
   static int n = RR_BUFSIZE - 1, x[RR_BUFSIZE * 2], sum;
 
   x[n] = x[n + RR_BUFSIZE] = rr_ok;
@@ -65,7 +65,7 @@ int detect_peak(int x0) {
         spkf = peak.value / 8 + spkf * 7 / 8;
 
         rr_average1 = calculate_rr_average1(rr);
-        rr_average2 = calculate_rr_average1(rr);
+        rr_average2 = calculate_rr_average2(rr);
 
         rr_low = rr_average2 * 92 / 100;
         rr_high = rr_average2 * 116 / 100;

@@ -1,6 +1,6 @@
 #include "filter.h"
 
-int low_pass(int value) {
+static int low_pass(int value) {
   static int n = 12, x[26], y1, y2;
   int y0;
 
@@ -14,7 +14,7 @@ int low_pass(int value) {
   return y0;
 }
 
-int high_pass(int value) {
+static int high_pass(int value) {
   static int n = 32, x[66], y1;
   int y0;
 
@@ -27,7 +27,7 @@ int high_pass(int value) {
   return y0;
 }
 
-int derivative(int value) {
+static int derivative(int value) {
   static int n = 4, x[10];
   int y0;
 
@@ -39,11 +39,11 @@ int derivative(int value) {
   return y0;
 }
 
-int square(int value) {
+static int square(int value) {
   return value * value;
 }
 
-int moving_window_integration(int value) {
+static int moving_window_integration(int value) {
   static int n = 29, x[60];
   int i, y0 = 0;
 
