@@ -1,6 +1,6 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-int getNextData();
+int get_next_data(int *data);
 
 #endif

@@ -10,9 +10,7 @@ int main(int argc, char *argv[]) {
   int raw_value, filtered_value;
   long real_time;
 
-  while (1) {
-    raw_value = getNextData();
-
+  while (get_next_data(&raw_value)) {
     // filter
     filtered_value = filter(raw_value);
 

@@ -3,13 +3,10 @@
 
 #include "sensor.h"
 
-int getNextData() {
-  int rc, x;
+int get_next_data(int *data) {
+  int rc;
 
-  rc = fscanf(stdin, "%i", &x);
-  if (rc <= 0) {
-    exit(EXIT_FAILURE);
-  }
+  rc = fscanf(stdin, "%i", data);
 
-  return x;
+  return (rc == 1);
 }
