@@ -55,11 +55,11 @@ int detect_peak(int x0) {
     peak.value = x1;
     peak.time = time - 1;
 
-    if (peak.value > threshold1) {
-      // store peak
-      shift_peak(peaks, PEAKS_BUFSIZE);
-      peaks[0] = peak;
+    // store peak
+    shift_peak(peaks, PEAKS_BUFSIZE);
+    peaks[0] = peak;
 
+    if (peak.value > threshold1) {
       // calculate rr
       rr = peak.time - last_rpeak.time;
 
