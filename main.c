@@ -4,9 +4,11 @@
 #include "sensor.h"
 #include "filter.h"
 #include "peaks.h"
+#include "config.h"
 
 int main(int argc, char *argv[]) {
   int raw_value, filtered_value;
+  long real_time;
 
   while (1) {
     raw_value = getNextData();
@@ -16,9 +18,11 @@ int main(int argc, char *argv[]) {
 
     // peak detection
     if (detect_peak(filtered_value)) {
-      printf("rpeak time:  %ld\n", last_rpeak.time);
+      real_time = last_rpeak.time * 1000 / SAMPLE_RATE - GROUP_DELAY;
+
       printf("rpeak value: %i\n", last_rpeak.value);
-      printf("heart rate:  %i\n", heartrate);
+      printf("rpeak time:  %ld ms\n", real_time);
+      printf("heart rate:  %i bpm\n", heartrate);
 
       if (last_rpeak.value < 2000) {
         printf("warning: weak heartbeat intensity!\n");

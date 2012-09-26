@@ -139,6 +139,7 @@ int detect_peak(int x0) {
   x2 = x1;
   x1 = x0;
 
+  // advance time
   time++;
 
   return rpeak_detected;
