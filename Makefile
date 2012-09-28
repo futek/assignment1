@@ -8,7 +8,7 @@ all: $(name)
 $(name): $(objects)
 	$(compiler) $(flags) $(objects) -o $(name)
 
-$(objects): %.o: %.c
+%.o: %.c
 	$(compiler) $(flags) -c $< -o $@
 
 clean:
