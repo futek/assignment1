@@ -44,15 +44,15 @@ static int square(int value) {
 }
 
 static int moving_window_integration(int value) {
-  static int n = 29, x[60];
-  int i, y0 = 0;
+  static int n = 30, x[62], sum;
 
-  x[n] = x[n + 30] = value;
-  for (i = 0; i < 30; i++) y0 += x[n + i] / 30;
+  x[n] = x[n + 31] = value;
+  sum -= x[n + 30];
+  sum += x[n];
 
-  if (--n < 0) n = 29;
+  if (--n < 0) n = 30;
 
-  return y0;
+  return sum / 30;
 }
 
 int filter(int value) {
