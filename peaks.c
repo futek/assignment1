@@ -7,25 +7,25 @@
 #define RR_BUFSIZE 8
 
 static int calculate_rr_average1(int rr) {
-  static int n = RR_BUFSIZE - 1, x[RR_BUFSIZE * 2], sum;
+  static int n = RR_BUFSIZE, x[(RR_BUFSIZE + 1) * 2], sum;
 
-  x[n] = x[n + RR_BUFSIZE] = rr;
-  sum -= x[n + RR_BUFSIZE - 1];
+  x[n] = x[n + RR_BUFSIZE + 1] = rr;
+  sum -= x[n + RR_BUFSIZE];
   sum += x[n];
 
-  if (--n < 0) n = RR_BUFSIZE - 1;
+  if (--n < 0) n = RR_BUFSIZE;
 
   return sum / RR_BUFSIZE;
 }
 
 static int calculate_rr_average2(int rr_ok) {
-  static int n = RR_BUFSIZE - 1, x[RR_BUFSIZE * 2], sum;
+  static int n = RR_BUFSIZE, x[(RR_BUFSIZE + 1) * 2], sum;
 
-  x[n] = x[n + RR_BUFSIZE] = rr_ok;
-  sum -= x[n + RR_BUFSIZE - 1];
+  x[n] = x[n + RR_BUFSIZE + 1] = rr_ok;
+  sum -= x[n + RR_BUFSIZE];
   sum += x[n];
 
-  if (--n < 0) n = RR_BUFSIZE - 1;
+  if (--n < 0) n = RR_BUFSIZE;
 
   return sum / RR_BUFSIZE;
 }
