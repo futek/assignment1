@@ -6,7 +6,7 @@
 int get_next_data(int *data) {
   int rc;
 
-  rc = fscanf(stdin, "%i", data);
+  rc = scanf("%i", data);
 
   return (rc == 1);
 }
