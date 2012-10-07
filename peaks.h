@@ -6,9 +6,7 @@ struct peak {
   unsigned long time;
 };
 
-struct peak last_rpeak;
-int heartrate, rr_misses;
-
-int detect_peak(int x0);
+void process_data(long time, int x0);
+void initialize();
 
 #endif

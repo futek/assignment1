@@ -8,30 +8,20 @@
 
 int main(int argc, char *argv[]) {
   int raw_value, filtered_value;
-  long real_time;
+  unsigned long time = 0;
+
+  // initialize peak detection
+  initialize();
 
   while (get_next_data(&raw_value)) {
     // filter
     filtered_value = filter(raw_value);
 
     // peak detection
-    if (detect_peak(filtered_value)) {
-      real_time = last_rpeak.time * 1000 / SAMPLE_RATE - GROUP_DELAY;
+    process_data(time, filtered_value);
 
-      printf("rpeak value: %i\n", last_rpeak.value);
-      printf("rpeak time:  %ld ms\n", real_time);
-      printf("heart rate:  %i bpm\n", heartrate);
-
-      if (last_rpeak.value < 2000) {
-        printf("warning: weak heartbeat intensity!\n");
-      }
-
-      if (rr_misses >= 5) {
-        printf("warning: irregular heartbeat rythm!\n");
-      }
-
-      printf("\n");
-    }
+    // advance time
+    time++;
   }
 
   return EXIT_SUCCESS;
