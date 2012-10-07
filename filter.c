@@ -1,8 +1,9 @@
 #include "filter.h"
 
-static int low_pass(int value) {
-  static int n = 12, x[26], y1, y2;
-  int y0;
+static long low_pass(long value) {
+  static int n = 12;
+  static long x[26], y1, y2;
+  long y0;
 
   x[n] = x[n + 13] = value;
   y0 = 2 * y1 - y2 + (x[n] - 2 * x[n + 6] + x[n + 12]) / 32;
@@ -14,9 +15,10 @@ static int low_pass(int value) {
   return y0;
 }
 
-static int high_pass(int value) {
-  static int n = 32, x[66], y1;
-  int y0;
+static long high_pass(long value) {
+  static int n = 32;
+  static long x[66], y1;
+  long y0;
 
   x[n] = x[n + 33] = value;
   y0 = y1 - x[n] / 32 + x[n + 16] - x[n + 17] + x[n + 32] / 32;
@@ -27,9 +29,10 @@ static int high_pass(int value) {
   return y0;
 }
 
-static int derivative(int value) {
-  static int n = 4, x[10];
-  int y0;
+static long derivative(long value) {
+  static int n = 4;
+  static long x[10];
+  long y0;
 
   x[n] = x[n + 5] = value;
   y0 = (2 * x[n] + x[n + 1] - x[n + 3] - 2 * x[n + 4]) / 8;
@@ -39,12 +42,13 @@ static int derivative(int value) {
   return y0;
 }
 
-static int square(int value) {
+static long square(long value) {
   return value * value;
 }
 
-static int moving_window_integration(int value) {
-  static int n = 30, x[62], sum;
+static long moving_window_integration(long value) {
+  static int n = 30;
+  static long x[62], sum;
 
   x[n] = x[n + 31] = value;
   sum -= x[n + 30];
